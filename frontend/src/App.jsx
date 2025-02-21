@@ -22,7 +22,7 @@ import Header from "./components/Header";
 import toast, { Toaster } from 'react-hot-toast';
 import PageNot from "./components/PageNot";
 import EditSitter from "./pages/Sitters/EditSitter";
-import SitterlistU from "./pages/Sitters/sitterlistU";
+import SitterlistU from "./pages/Sitters/SitterlistU";
 import EditStatus from "./pages/Sitters/EditStatus";
 import SitterBookingList from "./pages/Sitters/SitterBookinglist";
 import OwnersList from "./pages/Sitters/OwnersList";
