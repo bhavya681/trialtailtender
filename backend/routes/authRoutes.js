@@ -8,7 +8,9 @@ import {
   editProfile,
   deleteProfile,
   OwnersList,
-  getProfileById
+  getProfileById,
+  getBreedersList,
+  getBreederProfile,
 } from '../controllers/authController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 
@@ -23,4 +25,7 @@ router.put('/change-password', changePassword);
 router.put('/edit-profile', protect, editProfile);
 router.delete('/delete-profile', protect, deleteProfile);
 router.get('/owners-list', protect, OwnersList);
+router.get('/breeders-list', protect, getBreedersList);
+router.get('/breeders-profile/:breederId', protect, getBreederProfile);
+
 export default router;

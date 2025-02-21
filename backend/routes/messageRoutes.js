@@ -1,27 +1,40 @@
-import express from 'express';
+import express from "express";
 import {
-  getChatHistory,
-  sendMessage,
+  createMessage,
+  getMessages,
   updateMessage,
   deleteMessage,
-  getMessageOwner,
-} from '../controllers/messageController.js';
+  createCommunityMessage,
+  getCommunityMessages,
+  updateCommunityMessage,
+  deleteCommunityMessage,
+} from "../controllers/messageController.js";
+import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Chat history endpoint
-router.get('/:chatRoomId', getChatHistory);
+// Create a new message
+router.post("/", createMessage);
 
-// Send a message
-router.post('/', sendMessage);
+// Get messages between two users
+router.get("/:user1Id/:user2Id", getMessages);
 
 // Update a message
-router.put('/:messageId', updateMessage);
+router.put("/:messageId", updateMessage);
 
 // Delete a message
-router.delete('/:messageId', deleteMessage);
+router.delete("/:messageId", deleteMessage);
 
-// Identify message owner
-router.get('/owner/:messageId', getMessageOwner);
+// Community chat routes
+router.post('/community-chat',protect, createCommunityMessage);
+
+// Get all messages for a community room
+router.get('/community-chat/:roomId',protect, getCommunityMessages);
+
+// Update a community message
+router.put('/community-chat/:messageId',protect, updateCommunityMessage);
+
+// Delete a community message 
+router.delete('/community-chat/:messageId/:roomId',protect, deleteCommunityMessage);
 
 export default router;

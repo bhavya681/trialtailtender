@@ -1,148 +1,237 @@
-import React, { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EditSitter = () => {
   const [form, setForm] = useState({
-    name: '', email: '', experience: '', hourlyRate: '',paymentLink:''
+    name: "",
+    email: "",
+    experience: "",
+    hourlyRate: "",
+    paymentLink: "",
+    skills: [""],
+    aboutme: "",
+    facebook: "",
+    instagram: "",
+    isVet: false,
+    verificationDocs: [],
   });
+
   const { id } = useParams();
   const navigate = useNavigate();
+
   const fetchDetails = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/sitters/sitter/${id}`, {
-        method: 'GET',
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sitters/sitter/${id}`, {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      }); if (!res.ok) {
-        throw new Error('Failed to fetch sitter details');
-      }
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch sitter details");
+
       const data = await res.json();
       if (data.success) {
         setForm({
-          name: data.sitter.name, email: data.sitter.email, experience: data.sitter.experience, hourlyRate: data.sitter.hourlyRate,paymentLink:data.sitter.paymentLink
+          ...data.sitter,
+          skills: data.sitter.skills || [""],
+          verificationDocs: data.sitter.verificationDocs || [],
         });
       }
     } catch (error) {
-      console.log(error)
+      console.error(error);
+      toast.error("Error loading sitter details");
     }
-  }
-
+  };
 
   const updateEdit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:5000/api/sitters/edit/${id}`, {
-        method: 'PUT',
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sitters/edit/${id}`, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify({ name: form.name, email: form.email, experience: form.experience, hourlyRate: form.hourlyRate,paymentLink:form.paymentLink })
+        body: JSON.stringify(form),
       });
+
       const data = await res.json();
       if (data.success) {
-        setForm({
-          name: data.sitter.name, email: data.sitter.email, experience: data.sitter.experience, hourlyRate: data.sitter.hourlyRate,paymentLink:data.sitter.paymentLink
-        }); 
         toast.success(data.message);
-        navigate('/sitterlist');
+        navigate("/sitterlist");
+      } else {
+        toast.error(data.message);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      toast.error("Error updating sitter");
     }
-  }
+  };
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }
+  };
+
+  const handleSkillChange = (index, value) => {
+    const newSkills = [...form.skills];
+    newSkills[index] = value;
+    setForm((prev) => ({ ...prev, skills: newSkills }));
+  };
+
+  const addSkillField = () => {
+    setForm((prev) => ({ ...prev, skills: [...prev.skills, ""] }));
+  };
+
+  const removeSkillField = (index) => {
+    if (form.skills.length === 1) return;
+    const newSkills = form.skills.filter((_, i) => i !== index);
+    setForm((prev) => ({ ...prev, skills: newSkills }));
+  };
+
+  const handleVetToggle = (e) => {
+    setForm((prev) => ({ ...prev, isVet: e.target.checked }));
+  };
+
+  const handleVerificationDocs = (e) => {
+    const files = Array.from(e.target.files);
+    setForm((prev) => ({
+      ...prev,
+      verificationDocs: files.map((file) => URL.createObjectURL(file)),
+    }));
+  };
 
   useEffect(() => {
     fetchDetails();
-  }, [])
+  }, []);
 
   return (
-    <div className="container mx-auto py-8">
-      <section className="bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold mb-4">Edit Sitter Details</h2>
-        <form onSubmit={updateEdit} className="space-y-4">
-          <div className="flex space-x-4">
-            <div className="flex-1">
-              <label htmlFor="name" className="block text-gray-700">Name</label>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-6">
+    <div className="max-w-3xl w-full bg-white shadow-md rounded-lg p-8">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
+        Edit Sitter Profile
+      </h1>
+
+      <form onSubmit={updateEdit} className="space-y-6">
+        {/* Personal Information */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <input
+            type="text"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            placeholder="Full Name"
+            className="input-style"
+          />
+          <input
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            placeholder="Email Address"
+            className="input-style"
+          />
+          <input
+            type="text"
+            name="experience"
+            value={form.experience}
+            onChange={handleChange}
+            placeholder="Years of Experience"
+            className="input-style"
+          />
+          <input
+            type="number"
+            name="hourlyRate"
+            value={form.hourlyRate}
+            onChange={handleChange}
+            placeholder="Hourly Rate ($)"
+            className="input-style"
+          />
+        </div>
+
+        {/* Skills Section */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold text-gray-700">Skills</h2>
+          {form.skills.map((skill, index) => (
+            <div key={index} className="flex gap-4">
               <input
                 type="text"
-                id="name"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="Enter sitter's name"
+                value={skill}
+                onChange={(e) => handleSkillChange(index, e.target.value)}
+                className="input-style"
+                placeholder={`Skill ${index + 1}`}
               />
+              {index > 0 && (
+                <button
+                  type="button"
+                  onClick={() => removeSkillField(index)}
+                  className="btn-danger"
+                >
+                  ✕
+                </button>
+              )}
             </div>
-            <div className="flex-1">
-              <label htmlFor="age" className="block text-gray-700">Age</label>
-              <input
-                type="number"
-                id="experience"
-                name="experience"
-                value={form.experience}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="Enter year of experience"
-              />
-            </div>
+          ))}
+          <button type="button" onClick={addSkillField} className="btn-primary">
+            + Add Skill
+          </button>
+        </div>
+
+        {/* Vet Verification */}
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            checked={form.isVet}
+            onChange={handleVetToggle}
+            className="h-5 w-5 text-blue-600 rounded focus:ring focus:ring-blue-300"
+          />
+          <label className="text-gray-700">Are you a Vet?</label>
+        </div>
+        {form.isVet && (
+          <div>
+            <label className="block text-gray-700 font-medium">Upload Verification Documents</label>
+            <input type="file" multiple onChange={handleVerificationDocs} className="mt-2 input-style" />
           </div>
-          <div className="flex space-x-4">
-            <div className="flex-1">
-              <label htmlFor="email" className="block text-gray-700">Email</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="Enter sitter's email"
-              />
-            </div>
-            <div className="flex-1">
-              <label htmlFor="paymentLink" className="block text-gray-700">Enter Payment Recieve Link</label>
-              <input
-                type="text"
-                id="paymentLink"
-                name="paymentLink"
-                value={form.paymentLink}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="Enter sitter's paymentLink [Where you will recieve payment]"
-              />
-            </div>
-            <div className="flex-1">
-              <label htmlFor="phone" className="block text-gray-700">Phone</label>
-              <input
-                type="number"
-                id="hourlyRate"
-                name="hourlyRate"
-                value={form.hourlyRate}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="Enter hourly Charge"
-              />
-            </div>
-          </div>
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg"
-            >
-              Save Changes
-            </button>
-          </div>
-        </form>
-      </section>
+        )}
+
+        {/* Social & Payment Links */}
+        <div className="space-y-4">
+          <label className="text-gray-700 font-medium">Social & Payment Links</label>
+          <input
+            type="url"
+            name="paymentLink"
+            value={form.paymentLink}
+            onChange={handleChange}
+            placeholder="Payment Link"
+            className="input-style"
+          />
+          <input
+            type="url"
+            name="facebook"
+            value={form.facebook}
+            onChange={handleChange}
+            placeholder="Facebook Profile"
+            className="input-style"
+          />
+          <input
+            type="url"
+            name="instagram"
+            value={form.instagram}
+            onChange={handleChange}
+            placeholder="Instagram Profile"
+            className="input-style"
+          />
+        </div>
+
+        {/* Submit Button */}
+        <button type="submit" className="btn-success w-full">
+          Save Changes
+        </button>
+      </form>
     </div>
+  </div>
   );
 };
 

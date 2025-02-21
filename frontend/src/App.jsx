@@ -32,6 +32,15 @@ import ReviewsList from "./components/reviews/ReviewsList";
 import UpdateReview from "./components/reviews/UpdateReview";
 import CreateReview from "./components/reviews/CreateReview";
 import SitterProfile from "./pages/Sitters/SitterProfile";
+import SitterChats from "./pages/SitterChats";
+import OwnersChats from "./pages/OwnersChats";
+import BreedersList from "./pages/BreedersList";
+import BreederProfile from "./pages/BreederProfile";
+import CommunityChat from "./pages/CommunityChat";
+import BreederDetails from "./pages/BreedersDetails";
+import BreedersDetailUpdate from "./pages/BreedersDetailsUpdate";
+import BreederDetailsCreate from "./pages/BreederDetailsCreate";
+import DummyTest from "./pages/DummyTest";
 
 const App = () => {
   const auth = localStorage.getItem('token');
@@ -66,12 +75,21 @@ const App = () => {
             {/* <Route path="/sitterlistU" element={<SitterlistU />} /> */}
             <Route path="/sitterlistU" element={<SitterDetails />} />
             <Route path="/ownersList" element={<OwnersList />} />
-            <Route path="/chat/:chatId" element={<ChatBox />} />
+            {/* <Route path="/chat/:chatId" element={<ChatBox />} /> */}
             <Route path="/favourites" element={<Favourites />} />
             <Route path="/reviews/:id" element={<ReviewsList />} />
             <Route path="/edit/review/:reviewid/:sitterid" element={<UpdateReview />} />
             <Route path="/add/review/:id" element={<CreateReview />} />
             <Route path="/sitter/profile/:userSitterId/:sitterId" element={<SitterProfile/>} />
+            <Route path="/message/:usersitterid" element={<ChatBox/>}/>
+            <Route path="/sitter/chats" element={<SitterChats />} />
+            <Route path="/owner/chats" element={<OwnersChats />} />
+            <Route path="/breeders-list" element={<BreedersList />} />
+            <Route path="/breedersProfile/:breederId" element={<BreederProfile />} /> 
+            <Route path="/community-chat" element={<CommunityChat />} />
+            <Route path="/breeders-details/create" element={<BreederDetailsCreate />} />
+            <Route path="/breeder-details/:id" element={<BreederDetails />} /> 
+            <Route path="/breeder-details/edit/:breederId" element={<BreedersDetailUpdate />} />
           </>)
             :
             (<>
@@ -86,6 +104,8 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="*" element={<PageNot />} />
+
+          <Route path="/dummy" element={<DummyTest/>} />
         </Routes>
         <Toaster />
         <Footer />

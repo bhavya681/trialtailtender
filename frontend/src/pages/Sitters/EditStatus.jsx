@@ -10,7 +10,7 @@ const EditStatus = () => {
     useEffect(() => {
         const fetchBooking = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+                const res = await fetch(`${import.meta.env.VITE_API_URL}/api/bookings/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const EditStatus = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`http://localhost:5000/api/bookings/${id}/status`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/bookings/${id}/status`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

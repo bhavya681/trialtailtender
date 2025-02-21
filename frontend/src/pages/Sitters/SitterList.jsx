@@ -12,7 +12,7 @@ const SitterList = () => {
   useEffect(() => {
     const fetchSitters = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/sitters`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sitters`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const SitterList = () => {
     if (id) {
       const fetchSitter = async () => {
         try {
-          const res = await fetch(`http://localhost:5000/api/sitters/sitter/${id}`, {
+          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sitters/sitter/${id}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const SitterList = () => {
 
   const deleteStuff = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/sitters/delete/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sitters/delete/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

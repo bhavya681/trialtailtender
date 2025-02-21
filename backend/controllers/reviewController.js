@@ -32,6 +32,7 @@ export const addReview = async (req, res) => {
 export const getReviews = async (req, res) => {
   const { sitterId } = req.params;
 
+
   try {
     const sitter = await Sitter.findById(sitterId).populate('reviews.ownerId', 'name email');
     if (!sitter) {
@@ -55,6 +56,7 @@ export const updateReview = async (req, res) => {
       return res.status(404).json({ message: 'Review not found' });
     }
 
+  
     if (review.ownerId.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'You are not authorized to update this review' });
     }
@@ -62,8 +64,7 @@ export const updateReview = async (req, res) => {
     review.rating = rating || review.rating;
     review.comment = comment || review.comment;
     await review.save();
-
-    res.status(200).json({ message: 'Review updated successfully', review });
+    res.status(200).json({success:true, message: 'Review updated successfully', review });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

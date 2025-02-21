@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const Favourites = () => {
   const [favourites, setFavourites] = useState([]);
@@ -8,6 +9,13 @@ const Favourites = () => {
     const savedFavourites = JSON.parse(localStorage.getItem("favourites")) || [];
     setFavourites(savedFavourites);
   }, []);
+
+  const handleDelete = (id) => {
+    const updatedFavourites = favourites.filter(fav => fav._id !== id);
+    setFavourites(updatedFavourites);
+    localStorage.setItem("favourites", JSON.stringify(updatedFavourites));
+    toast.success("Sitter removed from favorites");
+  };
 
   return (
     <div className="max-w-7xl mx-auto mt-40 p-4 sm:p-6 lg:p-8">
@@ -21,7 +29,7 @@ const Favourites = () => {
           {favourites.map((fav) => (
             <div
               key={fav._id}
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition"
+              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition relative"
             >
               <img
                 src={fav.profile || "/placeholder.svg"}
@@ -35,6 +43,12 @@ const Favourites = () => {
               <p className="text-center text-gray-500">
                 Experience: {fav.experience} years
               </p>
+              <button
+                onClick={() => handleDelete(fav._id)}
+                className="mt-4 w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300"
+              >
+                Remove from Favorites
+              </button>
             </div>
           ))}
         </div>

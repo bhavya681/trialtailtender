@@ -24,7 +24,7 @@ const BookingList = () => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/bookings/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +43,7 @@ const BookingList = () => {
 
   const handleStatusUpdate = async (id, status) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/bookings/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const BookingList = () => {
 
   const fetchDetails = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/bookings", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/bookings`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

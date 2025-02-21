@@ -18,7 +18,7 @@ const SitterBookingList = () => {
   useEffect(() => {
     const fetchSitters = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/sitters`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sitters`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const SitterBookingList = () => {
       if (!newId) return;
 
       try {
-        const response = await fetch(`http://localhost:5000/api/bookings/bookings/sitter/${newId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/bookings/bookings/sitter/${newId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

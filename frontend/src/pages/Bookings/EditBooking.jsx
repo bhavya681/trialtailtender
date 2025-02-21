@@ -27,7 +27,7 @@ const EditBooking = () => {
                 setIsLoading(true);
                 
                 // Fetch booking details
-                const bookingRes = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+                const bookingRes = await fetch(`${import.meta.env.VITE_API_URL}/api/bookings/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ const EditBooking = () => {
                 }
 
                 // Fetch sitters
-                const sittersRes = await fetch('http://localhost:5000/api/sitters', {
+                const sittersRes = await fetch(`${import.meta.env.VITE_API_URL}/api/sitters`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const EditBooking = () => {
                 setSitters(sittersData?.sitters || []);
 
                 // Fetch pets
-                const petsRes = await fetch('http://localhost:5000/api/pets', {
+                const petsRes = await fetch(`${import.meta.env.VITE_API_URL}/api/pets`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ const EditBooking = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/bookings/${id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

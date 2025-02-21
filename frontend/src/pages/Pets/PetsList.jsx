@@ -14,7 +14,7 @@ const PetsList = () => {
 
   const fetchPets = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/pets`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/pets`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -32,7 +32,7 @@ const PetsList = () => {
 
   const deletePet = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/pets/delete/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/pets/delete/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

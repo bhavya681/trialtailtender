@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen font-sans">
+    {{if .preheader}}
+    <div class="hidden">
+        {{.preheader}}
+        &nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+    </div>
+    {{end}}
+
+    <div class="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 my-4 sm:my-8">
+        <div class="text-center py-6">
+            <img src="https://s3.ap-south-1.amazonaws.com/dev-scogo-novu-notifications/65a791daae0fbba91f05c56d/65a791daae0fbba91f05c573/71a0f9390186f767d56d3358838e701e.png" alt="Scogo Logo" class="max-w-[180px] sm:max-w-[220px] mx-auto transform hover:scale-105 transition-transform duration-300 drop-shadow-2xl">
+        </div>
+
+        <div class="bg-white rounded-3xl shadow-2xl p-6 sm:p-10 backdrop-blur-sm bg-opacity-95 border border-orange-200">
+            <div class="bg-gradient-to-r from-orange-600 to-orange-500 text-white p-6 rounded-2xl text-center font-bold mb-8 transform hover:scale-[1.02] transition-transform duration-300 flex items-center justify-center gap-3 shadow-lg">
+                <span class="text-3xl sm:text-4xl">⚠️</span>
+                <span class="text-xl sm:text-3xl tracking-tight">Internet Link DOWN Alert</span>
+            </div>
+
+            <div class="flex justify-around items-center mb-12 bg-orange-50 p-6 rounded-2xl shadow-inner">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-orange-500 rounded-full inline-flex items-center justify-center text-white">
+                        <span>1</span>
+                    </div>
+                    <p class="text-orange-800 text-sm mt-2 font-medium">Ticket Created</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-orange-500 rounded-full inline-flex items-center justify-center text-white">
+                        <span>2</span>
+                    </div>
+                    <p class="text-orange-800 text-sm mt-2 font-medium">Engineer Assigned</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-orange-200 rounded-full inline-flex items-center justify-center text-orange-600">
+                        <span>3</span>
+                    </div>
+                    <p class="text-orange-600 text-sm mt-2">Engineer Reached</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-orange-200 rounded-full inline-flex items-center justify-center text-orange-600">
+                        <span>4</span>
+                    </div>
+                    <p class="text-orange-600 text-sm mt-2">Sign Off</p>
+                </div>
+            </div>
+
+            <p class="text-lg sm:text-xl leading-relaxed text-gray-700 font-light px-2 text-center mb-12">
+                Scogo Smart Edge Router has detected an Internet Link Failure at one of your sites. Please review the details below:
+            </p>
+
+            <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800 border-b-2 border-orange-300 pb-2 mt-12 mb-8 flex items-center gap-3">
+                <span class="bg-orange-50 p-2 rounded-lg">🔍</span> Issue Details
+            </h2>
+            <div class="overflow-hidden rounded-2xl shadow-md border border-orange-200">
+                <table class="w-full border-collapse bg-gradient-to-br from-orange-50/50 to-white">
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800 w-1/4">Reason:</th>
+                        <td class="p-5 text-gray-700">Connection Terminated by ISP, Bill not paid on Time</td>
+                        <td class="p-5">
+                            <button class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-all transform hover:scale-105 focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 shadow-md font-medium">
+                                Pay Now
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800 border-b-2 border-orange-300 pb-2 mt-12 mb-8 flex items-center gap-3">
+                <span class="bg-orange-50 p-2 rounded-lg">💻</span> Device Details
+            </h2>
+            <div class="overflow-hidden rounded-2xl shadow-md border border-orange-200">
+                <table class="w-full border-collapse bg-gradient-to-br from-orange-50/50 to-white">
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800 w-1/3 sm:w-1/4">Hostname:</th>
+                        <td class="p-5 text-gray-700">{{.DEVICE_DETAILS.DEVICE_HOSTNAME}}</td>
+                    </tr>
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800">Model:</th>
+                        <td class="p-5 text-gray-700">{{.DEVICE_DETAILS.DEVICE_MODEL}}</td>
+                    </tr>
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800">Asset Number:</th>
+                        <td class="p-5 text-gray-700">{{.DEVICE_DETAILS.DEVICE_ASSET_NUMBER}}</td>
+                    </tr>
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800">Interface Name:</th>
+                        <td class="p-5 text-gray-700">{{.DEVICE_DETAILS.NETWORK_INTERFACE_NAME}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h2 class="text-2xl sm:text-3xl font-semibold text-gray-800 border-b-2 border-orange-300 pb-2 mt-12 mb-8 flex items-center gap-3">
+                <span class="bg-orange-50 p-2 rounded-lg">📍</span> Site Details
+            </h2>
+            <div class="overflow-hidden rounded-2xl shadow-md border border-orange-200">
+                <table class="w-full border-collapse bg-gradient-to-br from-orange-50/50 to-white">
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800 w-1/3 sm:w-1/4">Customer:</th>
+                        <td class="p-5 text-gray-700">{{.SITE_DETAILS.CUSTOMER_NAME}}</td>
+                    </tr>
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800">Enduser:</th>
+                        <td class="p-5 text-gray-700">{{.SITE_DETAILS.END_CUSTOMER_NAME}}</td>
+                    </tr>
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800">Address:</th>
+                        <td class="p-5 text-gray-700">{{.SITE_DETAILS.DEVICE_INSTALLATION_ADDRESS}}</td>
+                    </tr>
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800">SPOC Name:</th>
+                        <td class="p-5 text-gray-700">{{.SITE_DETAILS.SITE_SPOC}}</td>
+                    </tr>
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800">SPOC Phone:</th>
+                        <td class="p-5 text-gray-700">{{.SITE_DETAILS.SITE_SPOC_CONTACT_NUMBER}}</td>
+                    </tr>
+                    <tr class="border-b border-orange-100 hover:bg-orange-100/50 transition-colors duration-200">
+                        <th class="bg-orange-100 p-5 text-left font-semibold text-gray-800">SPOC Email:</th>
+                        <td class="p-5 text-gray-700">{{.SITE_DETAILS.SITE_SPOC_EMAIL_ADDRESS}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="mt-12 p-8 bg-orange-50 rounded-2xl text-gray-700 shadow-md border border-orange-200">
+                <p class="leading-relaxed text-lg">
+                    Please review this information promptly to address the issue and restore connectivity. For assistance, contact our support team at 
+                    <a href="mailto:ser-support@scogo.in" class="text-orange-600 hover:text-orange-700 font-medium underline decoration-2 decoration-orange-400/30 hover:decoration-orange-400 transition-all">ser-support@scogo.in</a>
+                </p>
+            </div>
+
+            <div class="text-center text-gray-700 mt-12 border-t border-orange-200 pt-8">
+                <p class="space-y-3">
+                    <span class="block text-xl">Best Regards,</span>
+                    <span class="block text-2xl font-bold text-orange-600">Scogo Smart Edge Router</span>
+                    <span class="block text-base font-light">Real-Time Notification Service</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

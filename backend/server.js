@@ -1,73 +1,77 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import connectDB from './config/db.js';
-import authRoutes from './routes/authRoutes.js';
-import petRoutes from './routes/petRoutes.js';
-import sitterRoutes from './routes/sitterRoutes.js';
-import bookingRoutes from './routes/bookingRoutes.js';
-import paymentRoutes from './routes/paymentRoutes.js';
-import chatRoutes from './routes/chatRoutes.js';
-import reviewRoutes from './routes/reviewRoutes.js';
-import http from 'http';
-import {Server} from 'socket.io';
-import messageRoutes from './routes/messageRoutes.js';
-import Message from './models/Message.js';
-import path from 'path';
-
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
+import petRoutes from "./routes/petRoutes.js";
+import sitterRoutes from "./routes/sitterRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
+import favRoutes from "./routes/favRoutes.js";
+import Message from "./models/Message.js";
+import http from "http";
+import { Server } from "socket.io";
+import path from "path";
+import communityChatRoutes from "./routes/communityChatRoutes.js";
 dotenv.config();
 connectDB();
 
 const app = express();
-const _dirname=path.resolve();
+const _dirname = path.resolve();
 app.use(cors());
 app.use(express.json());
-// Create HTTP server
+
+// Create HTTP Server
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 
-// WebSocket for real-time messaging
+// WebSocket for Real-Time Messaging
 io.on("connection", (socket) => {
-  // console.log("A user connected");
+  console.log("User connected:", socket.id);
 
-  // Join chat room
-  socket.on("joinRoom", (chatRoomId) => {
-    socket.join(chatRoomId);
-    // console.log(`User joined room: ${chatRoomId}`);
+  // Join chat room based on user IDs
+  socket.on("joinChat", ({ senderId, receiverId }) => {
+    const chatRoom = [senderId, receiverId].sort().join("_");
+    socket.join(chatRoom);
+    console.log(`User joined chat: ${chatRoom}`);
   });
 
-  // Handle new messages
+
+  // Sending messages
   socket.on("sendMessage", async (data) => {
-    const { chatRoomId, senderId, receiverId, message } = data;
-    const newMessage = new Message({ chatRoomId, senderId, receiverId, message });
+    const { senderId, receiverId, message } = data;
+    const newMessage = new Message({ senderId, receiverId, message });
 
     await newMessage.save();
-    io.to(chatRoomId).emit("receiveMessage", newMessage);
+
+    const chatRoom = [senderId, receiverId].sort().join("_");
+    io.to(chatRoom).emit("receiveMessage", newMessage);
   });
 
-  // Handle disconnection
   socket.on("disconnect", () => {
-    console.log("A user disconnected");
+    console.log("User disconnected:", socket.id);
   });
 });
 
-app.use('/api/messages',messageRoutes)
-// Routes
-app.get('/api/test', (req, res) => {
-  res.send('API is working');
-});
-app.use('/api/auth', authRoutes);
-app.use('/api/pets', petRoutes);
-app.use('/api/sitters', sitterRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/chatbot', chatRoutes);
-app.use('/api/reviews', reviewRoutes);
+// API Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/pets", petRoutes);
+app.use("/api/sitters", sitterRoutes);
+app.use("/api/bookings", bookingRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/chatbot", chatRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/community-chat", communityChatRoutes);
+app.use("/api/favourites", favRoutes);
+app.use(express.static(path.join(_dirname, "/frontend/dist")));
+// app.get("*", (_, res) => {
+//   res.sendFile(path.resolve(_dirname, "/frontend", "dist", "index.html"));
+// });
 
-app.use(express.static(path.join(_dirname,"/frontend/dist")));
-app.get('*',(_,res)=>{
-  res.sendFile(path.resolve(_dirname,"/frontend","dist","index.html"));
-});
-
+// Start Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

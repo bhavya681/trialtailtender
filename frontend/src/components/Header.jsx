@@ -1,6 +1,10 @@
-import { Dog, Menu, X } from 'lucide-react';
+import { Dog, DogIcon, LogIn, LogOut, Menu, MessageCircleDashed, SaveAllIcon, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { BiGroup, BiRegistered } from 'react-icons/bi';
+import { BsRobot } from 'react-icons/bs';
+import { FaCashRegister } from 'react-icons/fa';
+import { MdCreate } from 'react-icons/md';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
@@ -27,18 +31,18 @@ const Header = () => {
       const data = await res.json();
       if (data.success) {
         setProfile(data.user);
-      
+
       } else {
         toast.error(data.message || "Failed to fetch profile.");
       }
     } catch (error) {
       toast.error(error.message || "Error fetching profile.");
-    } 
+    }
   };
   useEffect(() => {
-    if(isLoggedIn){
-    fetchProfile();
-  }
+    if (isLoggedIn) {
+      fetchProfile();
+    }
   }, []);
   const handleLogout = () => {
     navigate('/');
@@ -46,6 +50,7 @@ const Header = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     localStorage.removeItem('auth-token');
+    localStorage.removeItem('favourites');
     localStorage.removeItem('userName');
     localStorage.removeItem('userId');
     localstorage.removeItem('userDetails');
@@ -73,8 +78,11 @@ const Header = () => {
               <>
                 {role === 'owner' ? (
                   <>
-                    <Link to="/petslist" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
-                      Pets
+                    <Link to="/petslist" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                      <DogIcon className="w-5 h-5" />
+                      <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        Pets
+                      </span>
                     </Link>
                     <Link to="/sitterlistU" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
                       Sitters
@@ -82,36 +90,91 @@ const Header = () => {
                     <Link to="/booklist" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
                       Bookings
                     </Link>
-                    <Link to="/favourites" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300 flex items-center gap-2">
+                    <Link to="/favourites" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
                       </svg>
-                      Favorites
+                      <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        Favorites
+                      </span>
                     </Link>
-
+                    <Link to="/sitter/chats" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                      <MessageCircleDashed size={20} />
+                      <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        Chats
+                      </span>
+                    </Link>
+                    <Link to="/breeders-list" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                      Breeders
+                    </Link>  
+                    <Link to="/community-chat" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                      <BiGroup size={20} />
+                      <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        Community
+                      </span>
+                    </Link>    
                   </>
-                ) : (
+                ) : role === 'sitter' ? (
                   <>
                     <Link to="/sitterlist" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
                       Sitters
                     </Link>
-                    <Link to="/sitter-bookings" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
-                      Bookings
+                    <Link to="/sitter-bookings" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                      <SaveAllIcon size={20} />
+                      <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        Bookings
+                      </span>
                     </Link>
                     <Link to="/ownersList" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
                       Owners
                     </Link>
+                    <Link to="/owner/chats" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                      <MessageCircleDashed size={20} />
+                      <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        Chats
+                      </span>
+                    </Link>
+                    <Link to="/community-chat" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                      <BiGroup size={20} />
+                      <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        Community
+                      </span>
+                    </Link>  
+                  </>
+                ) : (
+                  <>
+                    <Link to="/ownersList" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                      Owners
+                    </Link>
+                    <Link to="/owner/chats" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                      <MessageCircleDashed size={20} />
+                      <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        Chats
+                      </span>
+                    </Link>
+                    <Link to="/community-chat" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                      <BiGroup size={20} />
+                      <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                        Community
+                      </span>
+                    </Link>  
                   </>
                 )}
-                <Link to="/chatbot" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
-                  Chatbot
+                <Link to="/chatbot" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                  <BsRobot size={20}/>
+                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg">
+                    Chatbot
+                  </span>
                 </Link>
                 <div className="pl-4 flex items-center space-x-4 border-l border-white/10">
                   <button
                     onClick={handleLogout}
-                    className="px-4 py-2 text-sm font-medium text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300"
+                    className="relative group px-4 py-2 text-sm font-medium text-white bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-300"
                   >
-                    Logout
+                    <LogOut size={20}/>
+                    <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg">
+                      Logout
+                    </span>
                   </button>
                   <div className="relative group">
                     <img
@@ -121,16 +184,25 @@ const Header = () => {
                       onClick={() => navigate('/profile')}
                     />
                     <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-blue-900"></div>
+                    <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap shadow-lg">
+                      Profile
+                    </span>
                   </div>
                 </div>
               </>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link to="/login" className="px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
-                  Login
+                <Link to="/login" className="relative group px-4 py-2 text-sm font-medium text-blue-100 hover:bg-white/10 rounded-lg transition-colors duration-300">
+                  <LogIn size={20}/>
+                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                    Login
+                  </span>
                 </Link>
-                <Link to="/register" className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg shadow-blue-500/20 transition-all duration-300">
-                  Register
+                <Link to="/register" className="relative group px-4 py-2 text-sm font-medium text-white  hover:bg-blue-700 rounded-lg shadow-lg shadow-blue-500/20 transition-all duration-300">
+                  <MdCreate size={20}/>
+                  <span className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                    Register
+                  </span>
                 </Link>
               </div>
             )}

@@ -21,14 +21,14 @@ const AddBooking = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const sittersRes = await fetch('http://localhost:5000/api/sitters', {
+        const sittersRes = await fetch(`${import.meta.env.VITE_API_URL}/api/sitters`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
         });
-        const petsRes = await fetch('http://localhost:5000/api/pets', {
+        const petsRes = await fetch(`${import.meta.env.VITE_API_URL}/api/pets`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -38,6 +38,7 @@ const AddBooking = () => {
         const sittersData = await sittersRes.json();
         const petsData = await petsRes.json();
         setSitters(sittersData?.sitters || []);
+    
         setPets(petsData?.pets || []);
       } catch (error) {
         console.error(error);
@@ -49,6 +50,8 @@ const AddBooking = () => {
     fetchData();
   }, []);
 
+  useEffect(()=>{    console.log('dsds',sitters.map((sitter)=>sitter.isVet))},[])
+
   const handleChange = (e) => {
     setFormData((prevData) => ({ ...prevData, [e.target.name]: e.target.value }));
   };
@@ -56,7 +59,7 @@ const AddBooking = () => {
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5000/api/bookings', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +79,14 @@ const AddBooking = () => {
       toast.error('An error occurred while creating the booking');
     }
   };
+  const filteredSitters =
+  formData.serviceType === "Veterinary Check-Up"
+    ? sitters.filter((sitter) => sitter.isVet)
+    : sitters;
 
+useEffect(() => {
+  console.log("Filtered Sitters:", filteredSitters);
+}, [formData.serviceType, sitters]);
   return (
     <div className="max-w-2xl mx-auto p-6">
       <motion.div
@@ -137,10 +147,10 @@ const AddBooking = () => {
               required
             >
               <option value="">Select a sitter</option>
-              {sitters.map((sitter) => (
-                <option key={sitter._id} value={sitter._id}>
-                  {sitter.name} ({sitter.email})
-                </option>
+          {filteredSitters.map((sitter) => (
+            <option key={sitter._id} value={sitter._id}>
+              {sitter.name} ({sitter.email})
+            </option>
               ))}
             </select>
           </div>

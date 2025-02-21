@@ -24,7 +24,7 @@ const EditPet = () => {
   const params = useParams();
   const fetchPets = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/pets/${params.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/pets/${params.id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ const EditPet = () => {
   const updatePets = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://localhost:5000/api/pets/edit/${params.id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/pets/edit/${params.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -9,7 +9,7 @@ const SitterlistU = () => {
 
   const fetchSitter = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/sitters/all', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sitters/all`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ const SitterlistU = () => {
 
   const deleteStuff = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/sitters/delete/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/sitters/delete/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

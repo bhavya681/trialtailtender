@@ -74,7 +74,6 @@
 
 // export default UpdateReview;
 
-
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -88,16 +87,17 @@ const UpdateReview = () => {
 
   useEffect(() => {
     const fetchReview = async () => {
-      const response = await fetch(`http://localhost:5000/api/reviews/${params.sitterid}`,{
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews/${params.sitterid}`,{
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('token')}`}
       });
       const data = await response.json();
+      console.log(data[0].comment);
       if (response.ok) {
-        setRating(data.rating);
-        setComment(data.comment);
+        setRating(data[0].rating);
+        setComment(data[0].comment);
       }
     };
     fetchReview();
@@ -106,7 +106,7 @@ const UpdateReview = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:5000/api/reviews/${params.reviewid}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews/${params.reviewid}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -116,10 +116,14 @@ const UpdateReview = () => {
       });
 
       const data = await response.json();
-      if (response.ok) {
+    
+console.log(data);
+if(data.success){
         toast.success('Review updated successfully!');
         navigate(`/booklist`);
-      }
+}else{
+  toast.error(data.message)
+}
     } catch (error) {
       console.error('Error:', error);
       toast.error('An error occurred while updating the review.');
