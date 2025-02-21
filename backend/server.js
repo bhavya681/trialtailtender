@@ -21,12 +21,12 @@ connectDB();
 
 const app = express();
 const _dirname = path.resolve();
-app.use(cors());
+app.use(cors({origin:process.env.CLIENT_URL}));
 app.use(express.json());
 
 // Create HTTP Server
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, { cors: { origin: process.env.CLIENT_URL } });
 
 // WebSocket for Real-Time Messaging
 io.on("connection", (socket) => {
