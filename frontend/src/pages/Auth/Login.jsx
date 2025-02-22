@@ -8,7 +8,7 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const fetchDetails = async () => {
+  const fetchDetails = async (e) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         method: 'POST',

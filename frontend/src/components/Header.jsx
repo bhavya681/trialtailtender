@@ -14,6 +14,9 @@ const Header = () => {
   const [profile, setProfile] = useState(null);
   const role = localStorage.getItem('user');
   const isLoggedIn = localStorage.getItem('user') && localStorage.getItem('token');
+  useEffect(() => {
+ console.log(import.meta.env.VITE_API_URL);
+  }, []);
   const fetchProfile = async () => {
     try {
       const res = await fetch("http://localhost:5000/api/auth/profile", {
