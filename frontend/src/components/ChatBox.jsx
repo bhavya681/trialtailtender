@@ -7,7 +7,7 @@ import { BsEmojiSmile, BsMoonFill, BsSunFill } from "react-icons/bs";
 import { FiPaperclip } from "react-icons/fi";
 import { v4 as uuidv4 } from 'uuid';
 
-const socket = io("${import.meta.env.VITE_API_URL}");
+const socket = io(`${import.meta.env.VITE_API_URL}`);
 
 const ChatBox = () => {
   const { usersitterid } = useParams();
